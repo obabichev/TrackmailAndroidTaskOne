@@ -2,7 +2,6 @@ package com.petterpet.trackmailtaskone.asynctask;
 
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.TextView;
 
 import com.petterpet.trackmailtaskone.activity.CounterActivity;
 
@@ -13,25 +12,28 @@ import static com.petterpet.trackmailtaskone.utils.ThreadsUtil.sleep;
  * Created by obabichev on 11/10/16.
  */
 
-public class CounterAsyncTask extends AsyncTask<Void, Void, Void> {
+public class CounterAsyncTask extends AsyncTask<Integer, Integer, Void> {
 
     private final String TAG = CounterAsyncTask.class.getSimpleName();
 
     private final long PERIOD = 1000L;
 
-    private int currentValue;
     private CounterActivity activity;
 
-    public CounterAsyncTask(int currentValue, CounterActivity activity) {
-        this.currentValue = currentValue;
+    public CounterAsyncTask(CounterActivity activity) {
         this.activity = activity;
     }
 
     @Override
-    protected Void doInBackground(Void... params) {
-        Log.d(TAG, "doInBackgr:" + currentValue);
+    protected Void doInBackground(Integer... params) {
+        Log.d(TAG, "doInBackgr:");
+        if (params.length == 0){
+            return null;
+        }
+
+        int currentValue = params[0];
         while (currentValue <= 1000) {
-            publishProgress();
+            publishProgress(currentValue);
             sleep(PERIOD);
             currentValue++;
             if (isCancelled()) {
@@ -42,13 +44,12 @@ public class CounterAsyncTask extends AsyncTask<Void, Void, Void> {
     }
 
     @Override
-    protected void onProgressUpdate(Void... values) {
+    protected void onProgressUpdate(Integer... values) {
         super.onProgressUpdate(values);
-        activity.setText(convertNumberToWords(currentValue));
-    }
-
-    public int getCurrentValue() {
-        return currentValue;
+        if (values.length > 0) {
+            activity.setText(convertNumberToWords(values[0]));
+            activity.setCurrentValue(values[0]);
+        }
     }
 
     @Override

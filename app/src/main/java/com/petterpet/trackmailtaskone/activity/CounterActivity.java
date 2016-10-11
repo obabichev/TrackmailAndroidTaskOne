@@ -34,19 +34,29 @@ public class CounterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_counter);
 
+        restoreState(savedInstanceState);
+        init();
+    }
+
+    private void restoreState(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
             currentValue = savedInstanceState.getInt(CURRENT_VALUE_KEY);
             continueCounting = savedInstanceState.getBoolean(CONTINUE_COUNTING_KEY);
         }
+    }
 
+    private void init() {
         currentValueTextView = (TextView) findViewById(R.id.current_value_text_view);
+
+
         startButton = (Button) findViewById(R.id.start_button);
-        startButton.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.start_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startCounting();
             }
         });
+
         stopButton = (Button) findViewById(R.id.stop_button);
         stopButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,12 +77,6 @@ public class CounterActivity extends AppCompatActivity {
         }
     }
 
-    private void startCounting() {
-        switchState(true);
-        counterAsyncTask = new CounterAsyncTask(currentValue, this);
-        counterAsyncTask.execute();
-    }
-
     @Override
     protected void onPause() {
         super.onPause();
@@ -82,14 +86,6 @@ public class CounterActivity extends AppCompatActivity {
         }
         stopCounting();
     }
-
-    private void stopCounting() {
-        if (counterAsyncTask != null && !counterAsyncTask.isCancelled()) {
-            currentValue = counterAsyncTask.getCurrentValue();
-            counterAsyncTask.cancel(false);
-        }
-    }
-
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -104,13 +100,29 @@ public class CounterActivity extends AppCompatActivity {
         stopButton.setVisibility(isCounting ? View.VISIBLE : View.GONE);
     }
 
-    public void setText(String text){
+    public void setText(String text) {
         currentValueTextView.setText(text);
     }
 
-    public void resetCounting(){
+    private void startCounting() {
+        switchState(true);
+        counterAsyncTask = new CounterAsyncTask(this);
+        counterAsyncTask.execute(currentValue);
+    }
+
+    private void stopCounting() {
+        if (counterAsyncTask != null && !counterAsyncTask.isCancelled()) {
+            counterAsyncTask.cancel(false);
+        }
+    }
+
+    public void resetCounting() {
         switchState(false);
         setText("");
         currentValue = 0;
+    }
+
+    public void setCurrentValue(int currentValue) {
+        this.currentValue = currentValue;
     }
 }
