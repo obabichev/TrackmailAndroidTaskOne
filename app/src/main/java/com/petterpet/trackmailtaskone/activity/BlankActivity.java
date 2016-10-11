@@ -1,10 +1,10 @@
 package com.petterpet.trackmailtaskone.activity;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
-import com.petterpet.trackmailtaskone.asynctask.BlankAsyncTask;
 import com.petterpet.trackmailtaskone.R;
+import com.petterpet.trackmailtaskone.asynctask.BlankAsyncTask;
 
 public class BlankActivity extends AppCompatActivity {
 

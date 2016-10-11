@@ -4,7 +4,8 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.TextView;
 
-import static com.petterpet.trackmailtaskone.utils.ThreadUtils.sleep;
+import static com.petterpet.trackmailtaskone.utils.NumbersUtil.convertNumberToWords;
+import static com.petterpet.trackmailtaskone.utils.ThreadsUtil.sleep;
 
 /**
  * Created by obabichev on 11/10/16.
@@ -28,11 +29,11 @@ public class CounterAsyncTask extends AsyncTask<Void, Void, Void> {
     @Override
     protected Void doInBackground(Void... params) {
         Log.d(TAG, "doInBackgr:" + currentValue);
-        while (currentValue < 999){
+        while (currentValue < 999) {
             publishProgress();
             sleep(PERIOD);
             currentValue++;
-            if (isCancelled()){
+            if (isCancelled()) {
                 return null;
             }
         }
@@ -42,7 +43,7 @@ public class CounterAsyncTask extends AsyncTask<Void, Void, Void> {
     @Override
     protected void onProgressUpdate(Void... values) {
         super.onProgressUpdate(values);
-        textView.setText("" + currentValue);
+        textView.setText(convertNumberToWords(currentValue));
     }
 
     public int getCurrentValue() {

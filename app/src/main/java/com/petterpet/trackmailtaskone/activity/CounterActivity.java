@@ -6,8 +6,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.petterpet.trackmailtaskone.asynctask.CounterAsyncTask;
 import com.petterpet.trackmailtaskone.R;
+import com.petterpet.trackmailtaskone.asynctask.CounterAsyncTask;
+
+import static com.petterpet.trackmailtaskone.utils.NumbersUtil.convertNumberToWords;
 
 /**
  * Created by obabichev on 11/10/16.
@@ -61,7 +63,7 @@ public class CounterActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        currentValueTextView.setText("" + currentValue);
+        currentValueTextView.setText(convertNumberToWords(currentValue));
         if (continueCounting) {
             switchState(true);
             counterAsyncTask = new CounterAsyncTask(currentValue, currentValueTextView);

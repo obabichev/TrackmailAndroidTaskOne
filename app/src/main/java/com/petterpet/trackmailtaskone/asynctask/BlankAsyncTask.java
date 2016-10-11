@@ -7,7 +7,7 @@ import android.util.Log;
 
 import com.petterpet.trackmailtaskone.activity.CounterActivity;
 
-import static com.petterpet.trackmailtaskone.utils.ThreadUtils.sleep;
+import static com.petterpet.trackmailtaskone.utils.ThreadsUtil.sleep;
 
 /**
  * Created by obabichev on 11/10/16.
