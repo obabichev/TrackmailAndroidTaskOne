@@ -4,6 +4,8 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.TextView;
 
+import com.petterpet.trackmailtaskone.activity.CounterActivity;
+
 import static com.petterpet.trackmailtaskone.utils.NumbersUtil.convertNumberToWords;
 import static com.petterpet.trackmailtaskone.utils.ThreadsUtil.sleep;
 
@@ -18,18 +20,17 @@ public class CounterAsyncTask extends AsyncTask<Void, Void, Void> {
     private final long PERIOD = 1000L;
 
     private int currentValue;
+    private CounterActivity activity;
 
-    private TextView textView;
-
-    public CounterAsyncTask(int currentValue, TextView textView) {
+    public CounterAsyncTask(int currentValue, CounterActivity activity) {
         this.currentValue = currentValue;
-        this.textView = textView;
+        this.activity = activity;
     }
 
     @Override
     protected Void doInBackground(Void... params) {
         Log.d(TAG, "doInBackgr:" + currentValue);
-        while (currentValue < 999) {
+        while (currentValue <= 1000) {
             publishProgress();
             sleep(PERIOD);
             currentValue++;
@@ -43,7 +44,7 @@ public class CounterAsyncTask extends AsyncTask<Void, Void, Void> {
     @Override
     protected void onProgressUpdate(Void... values) {
         super.onProgressUpdate(values);
-        textView.setText(convertNumberToWords(currentValue));
+        activity.setText(convertNumberToWords(currentValue));
     }
 
     public int getCurrentValue() {
@@ -54,5 +55,12 @@ public class CounterAsyncTask extends AsyncTask<Void, Void, Void> {
     protected void onCancelled() {
         super.onCancelled();
         Log.d(TAG, "onCancelled");
+    }
+
+    @Override
+    protected void onPostExecute(Void aVoid) {
+        super.onPostExecute(aVoid);
+        Log.d(TAG, "onPostExecute");
+        activity.resetCounting();
     }
 }

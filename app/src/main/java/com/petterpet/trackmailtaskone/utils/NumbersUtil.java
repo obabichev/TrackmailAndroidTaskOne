@@ -28,13 +28,17 @@ public class NumbersUtil {
 
     public static String convertNumberToWords(int number) {
         if (number == 0) {
-            return "ноль";
+            return "";
+        }
+
+        if (number == 1000){
+            return "тысяча";
         }
 
         StringBuilder sb = new StringBuilder();
 
         if (number > 99) {
-            int index = number / 100 - 1;
+            int index = (number % 1000) / 100 - 1;
             sb.append(HUNDREDS[index]);
             number %= 100;
             sb.append(" ");

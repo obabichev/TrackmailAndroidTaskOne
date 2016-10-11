@@ -20,7 +20,7 @@ public class CounterActivity extends AppCompatActivity {
     private final String CURRENT_VALUE_KEY = "CURRENT_VALUE_KEY";
     private final String CONTINUE_COUNTING_KEY = "CONTINUE_COUNTING_KEY";
 
-    private int currentValue = 1;
+    private int currentValue = 0;
 
     private CounterAsyncTask counterAsyncTask;
     private boolean continueCounting = false;
@@ -44,9 +44,7 @@ public class CounterActivity extends AppCompatActivity {
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                switchState(true);
-                counterAsyncTask = new CounterAsyncTask(currentValue, currentValueTextView);
-                counterAsyncTask.execute();
+                startCounting();
             }
         });
         stopButton = (Button) findViewById(R.id.stop_button);
@@ -65,10 +63,14 @@ public class CounterActivity extends AppCompatActivity {
         super.onResume();
         currentValueTextView.setText(convertNumberToWords(currentValue));
         if (continueCounting) {
-            switchState(true);
-            counterAsyncTask = new CounterAsyncTask(currentValue, currentValueTextView);
-            counterAsyncTask.execute();
+            startCounting();
         }
+    }
+
+    private void startCounting() {
+        switchState(true);
+        counterAsyncTask = new CounterAsyncTask(currentValue, this);
+        counterAsyncTask.execute();
     }
 
     @Override
@@ -100,5 +102,15 @@ public class CounterActivity extends AppCompatActivity {
     public void switchState(boolean isCounting) {
         startButton.setVisibility(isCounting ? View.GONE : View.VISIBLE);
         stopButton.setVisibility(isCounting ? View.VISIBLE : View.GONE);
+    }
+
+    public void setText(String text){
+        currentValueTextView.setText(text);
+    }
+
+    public void resetCounting(){
+        switchState(false);
+        setText("");
+        currentValue = 0;
     }
 }
