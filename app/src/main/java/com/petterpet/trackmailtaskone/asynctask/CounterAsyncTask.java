@@ -4,8 +4,8 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.petterpet.trackmailtaskone.activity.CounterActivity;
+import com.petterpet.trackmailtaskone.utils.NumbersUtil;
 
-import static com.petterpet.trackmailtaskone.utils.NumbersUtil.convertNumberToWords;
 import static com.petterpet.trackmailtaskone.utils.ThreadsUtil.sleep;
 
 /**
@@ -27,7 +27,7 @@ public class CounterAsyncTask extends AsyncTask<Integer, Integer, Void> {
     @Override
     protected Void doInBackground(Integer... params) {
         Log.d(TAG, "doInBackgr:");
-        if (params.length == 0){
+        if (params.length == 0) {
             return null;
         }
 
@@ -47,7 +47,7 @@ public class CounterAsyncTask extends AsyncTask<Integer, Integer, Void> {
     protected void onProgressUpdate(Integer... values) {
         super.onProgressUpdate(values);
         if (values.length > 0) {
-            activity.setText(convertNumberToWords(values[0]));
+            activity.setText(new NumbersUtil(activity).convertNumberToWords(values[0]));
             activity.setCurrentValue(values[0]);
         }
     }

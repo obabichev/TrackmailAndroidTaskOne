@@ -8,8 +8,8 @@ import android.widget.TextView;
 
 import com.petterpet.trackmailtaskone.R;
 import com.petterpet.trackmailtaskone.asynctask.CounterAsyncTask;
+import com.petterpet.trackmailtaskone.utils.NumbersUtil;
 
-import static com.petterpet.trackmailtaskone.utils.NumbersUtil.convertNumberToWords;
 
 /**
  * Created by obabichev on 11/10/16.
@@ -24,10 +24,10 @@ public class CounterActivity extends AppCompatActivity {
 
     private CounterAsyncTask counterAsyncTask;
     private boolean continueCounting = false;
+    private boolean isCounting;
 
     private TextView currentValueTextView;
-    private Button startButton;
-    private Button stopButton;
+    private Button startStopButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,22 +48,16 @@ public class CounterActivity extends AppCompatActivity {
     private void init() {
         currentValueTextView = (TextView) findViewById(R.id.current_value_text_view);
 
-
-        startButton = (Button) findViewById(R.id.start_button);
-        findViewById(R.id.start_button).setOnClickListener(new View.OnClickListener() {
+        startStopButton = (Button) findViewById(R.id.start_stop_button);
+        startStopButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startCounting();
-            }
-        });
-
-        stopButton = (Button) findViewById(R.id.stop_button);
-        stopButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                switchState(false);
-                stopCounting();
-                continueCounting = false;
+                if (isCounting) {
+                    stopCounting();
+                    continueCounting = false;
+                } else {
+                    startCounting();
+                }
             }
         });
     }
@@ -71,7 +65,7 @@ public class CounterActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        currentValueTextView.setText(convertNumberToWords(currentValue));
+        currentValueTextView.setText(new NumbersUtil(this).convertNumberToWords(currentValue));
         if (continueCounting) {
             startCounting();
         }
@@ -96,8 +90,8 @@ public class CounterActivity extends AppCompatActivity {
     }
 
     public void switchState(boolean isCounting) {
-        startButton.setVisibility(isCounting ? View.GONE : View.VISIBLE);
-        stopButton.setVisibility(isCounting ? View.VISIBLE : View.GONE);
+        this.isCounting = isCounting;
+        startStopButton.setText(isCounting ? getString(R.string.stop_button) : getString(R.string.start_button));
     }
 
     public void setText(String text) {
@@ -114,6 +108,7 @@ public class CounterActivity extends AppCompatActivity {
         if (counterAsyncTask != null && !counterAsyncTask.isCancelled()) {
             counterAsyncTask.cancel(false);
         }
+        switchState(false);
     }
 
     public void resetCounting() {
